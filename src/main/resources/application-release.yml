@@ -1,0 +1,45 @@
+server:
+  port: 8099
+spring:
+  mvc:
+    servlet:
+      path: /api
+
+  datasource:
+    url: jdbc:mysql://172.27.58.152:3306/schedule_server?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&useAffectedRows=true
+    username: test
+    password: test
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    schema: classpath:schema/tables_mysql_innodb.sql
+    initialization-mode: never
+
+  quartz:
+    job-store-type: jdbc
+    scheduler-name: SpringBootScheduler
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: MyScheduler
+            instanceId: NON_CLUSTERED
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            useProperties: false
+            misfireThreshold: 60000
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 25
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+
+logging:
+  config: classpath:logback.xml
+mybatis-plus:
+  configuration:
+    auto-mapping-unknown-column-behavior: warning
+  global-config:
+    db-config:
+      id-type: auto
